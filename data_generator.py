@@ -2,7 +2,7 @@ import os
 import random as rnd
 
 from PIL import Image, ImageFilter
-
+from PIL import Image, ImageDraw
 import computer_text_generator
 import background_generator
 import distorsion_generator
@@ -103,26 +103,29 @@ class FakeTextDataGenerator(object):
         #############################
 
         new_text_width, new_text_height = resized_img.size
-        print(background_width,background_height)
+        #print(background_width,background_height)
         if alignment == 0 :
-            print(0)
+            #print(0)
             background.paste(resized_img, (margin_left, margin_top), resized_img)
             
         elif alignment == 1:
-            print(1)
+            #print(1)
             background.paste(resized_img, (int(background_width / 2 - new_text_width / 2), margin_top), resized_img)
             
         elif alignment == 2:
-            print(background.size)
+            #print(background.size)
             picture_width=background.size[0]
             picture_height=background.size[1]
             re_width,re_height=resized_img.size
             rand_x=rnd.randint(margin_left+re_width,   picture_width-margin_right-re_width) 
-            rand_y=rnd.randint(margin_bottom+re_height,   picture_height-margin_top-re_height) 
-            print(rand_x,rand_y)
+            rand_y=rnd.randint(margin_bottom+re_height,   picture_height-margin_top-re_height)
+
+            #print(rand_x,rand_y)
             
             background.paste(resized_img, (rand_x,rand_y), resized_img)
-            print(text)
+            # draw = ImageDraw.Draw(background)
+            # draw.rectangle((rand_x,rand_y,rand_x+new_text_width,rand_y+new_text_height), outline=(0,255,0), width = 2)
+            #print(text)
             
         else:
             background.paste(resized_img, (background_width - new_text_width - margin_right, margin_top), resized_img)
@@ -146,9 +149,13 @@ class FakeTextDataGenerator(object):
             image_name = '{}_{}.{}'.format(str(index), text, extension)
         elif name_format == 2:
             image_name = '{}.{}'.format(str(index),extension)
+        elif name_format == 3:
+            image_name = '{}_{}.{}'.format(text,str([rand_x,rand_y,rand_x+new_text_width,rand_y+new_text_height]),extension)
+        
         else:
             print('{} is not a valid name format. Using default.'.format(name_format))
             image_name = '{}_{}.{}'.format(text, str(index), extension)
 
         # Save the image
         final_image.convert('RGB').save(os.path.join(out_dir, image_name))
+        #final_image.convert('RGB').save(os.path.join(out_dir, image_name))
