@@ -1,0 +1,1 @@
+for i in {1..9000}; do python run.py -w 10 -f 64 -l ko --output_dir out/basic; done;
